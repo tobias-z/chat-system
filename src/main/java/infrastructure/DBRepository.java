@@ -3,7 +3,7 @@ package infrastructure;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface Database<T> {
+public interface DBRepository<T> {
 
     T persist(T entity) throws SQLException;
 

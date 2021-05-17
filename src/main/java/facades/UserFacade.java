@@ -2,7 +2,7 @@ package facades;
 
 import domain.User;
 import infrastructure.DBConnection;
-import infrastructure.Database;
+import infrastructure.DBRepository;
 import infrastructure.database.DBUser;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,34 +10,34 @@ import java.util.List;
 public class UserFacade {
 
     private static UserFacade instance;
-    private final Database<User> database;
+    private final DBRepository<User> db;
 
-    public UserFacade(Database<User> database) {
-        this.database = database;
+    public UserFacade(DBRepository<User> db) {
+        this.db = db;
     }
 
     public static UserFacade getInstance() {
         if (instance == null) {
-            Database<User> database = new DBUser(new DBConnection());
-            instance = new UserFacade(database);
+            DBRepository<User> DBRepository = new DBUser(new DBConnection());
+            instance = new UserFacade(DBRepository);
         }
         return instance;
     }
 
     public User createUser(User user) throws SQLException {
-        return database.persist(user);
+        return db.persist(user);
     }
 
     public User getUserById(int userId) throws SQLException {
-        return database.getById(userId);
+        return db.getById(userId);
     }
 
     public List<User> getAllUsers() throws SQLException {
-        return database.getAll();
+        return db.getAll();
     }
 
     public List<User> getAllUsersWithCustomQuery() throws SQLException {
-        return database.createQuery("SELECT * FROM users");
+        return db.createQuery("SELECT * FROM users");
     }
 
 }

@@ -1,7 +1,6 @@
-package controller;
+package entries;
 
 import domain.Server;
-import ui.Chat;
 
 public class Main {
 

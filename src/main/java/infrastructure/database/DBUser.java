@@ -2,14 +2,14 @@ package infrastructure.database;
 
 import domain.User;
 import infrastructure.DBConnection;
-import infrastructure.Database;
+import infrastructure.DBRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBUser implements Database<User> {
+public class DBUser implements DBRepository<User> {
 
     private final DBConnection connection;
 
@@ -19,6 +19,14 @@ public class DBUser implements Database<User> {
 
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
         return new User(resultSet.getString("user.name"));
+    }
+
+    private List<User> getListOfUsersFromResultSet(ResultSet resultSet) throws SQLException {
+        List<User> users = new ArrayList<>();
+        while (resultSet.next()) {
+            users.add(mapResultSetToUser(resultSet));
+        }
+        return users;
     }
 
     @Override
@@ -56,11 +64,7 @@ public class DBUser implements Database<User> {
         try (Connection conn = connection.getConnection()) {
             var statement = conn.prepareStatement("SELECT * FROM users");
             ResultSet resultSet = statement.executeQuery();
-            List<User> users = new ArrayList<>();
-            while (resultSet.next()) {
-                users.add(mapResultSetToUser(resultSet));
-            }
-            return users;
+            return getListOfUsersFromResultSet(resultSet);
         } catch (SQLException throwables) {
             throw new SQLException("Could not find any users");
         }
@@ -71,11 +75,7 @@ public class DBUser implements Database<User> {
         try (Connection conn = connection.getConnection()) {
             var statement = conn.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
-            List<User> users = new ArrayList<>();
-            while (resultSet.next()) {
-                users.add(mapResultSetToUser(resultSet));
-            }
-            return users;
+            return getListOfUsersFromResultSet(resultSet);
         } catch (SQLException throwables) {
             throw new SQLException("Did not get a result from query: " + query);
         }
