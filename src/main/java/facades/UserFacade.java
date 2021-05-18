@@ -1,4 +1,4 @@
-package unit.facades;
+package facades;
 
 import domain.user.User;
 import infrastructure.DBConnection;

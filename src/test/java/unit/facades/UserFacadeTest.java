@@ -3,6 +3,7 @@ package unit.facades;
 import static org.junit.jupiter.api.Assertions.*;
 
 import domain.user.User;
+import facades.UserFacade;
 import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,6 @@ class UserFacadeTest {
     @DisplayName("get all should return a list of users")
     void getAllShouldReturnAListOfUsers() throws SQLException {
         List<User> users = FACADE.getAllUsers();
-        users.forEach(System.out::println);
         assertTrue(users.isEmpty());
     }
 
@@ -25,7 +25,6 @@ class UserFacadeTest {
     @DisplayName("get by id should return a user")
     void getByIdShouldReturnAUser() throws SQLException {
         User user = FACADE.getUserById(1);
-        System.out.println(user.getName());
         assertNotNull(user);
     }
 

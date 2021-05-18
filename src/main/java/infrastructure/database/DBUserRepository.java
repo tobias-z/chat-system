@@ -1,9 +1,8 @@
 package infrastructure.database;
 
 import domain.user.User;
-import infrastructure.DBConnection;
 import infrastructure.DBRepository;
-import java.lang.reflect.Constructor;
+import infrastructure.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
