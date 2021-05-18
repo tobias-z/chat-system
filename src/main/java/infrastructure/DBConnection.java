@@ -7,7 +7,6 @@ import java.sql.SQLException;
 public class DBConnection {
 
     private final String DB_URL;
-    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     private static final String USER = "dev";
     private static final String PASS = "ax2";
@@ -15,7 +14,7 @@ public class DBConnection {
     public DBConnection(String url) {
         this.DB_URL = url == null ? "jdbc:mysql://localhost:3306/chat?serverTimezone=CET" : url;
         try {
-            Class.forName(JDBC_DRIVER);
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }

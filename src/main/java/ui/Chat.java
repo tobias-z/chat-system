@@ -1,7 +1,7 @@
 package ui;
 
 import domain.Server;
-import domain.User;
+import domain.user.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;

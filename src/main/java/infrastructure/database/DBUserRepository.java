@@ -1,24 +1,26 @@
 package infrastructure.database;
 
-import domain.User;
+import domain.user.User;
 import infrastructure.DBConnection;
 import infrastructure.DBRepository;
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBUser implements DBRepository<User> {
+public class DBUserRepository implements DBRepository<User, Integer> {
 
     private final DBConnection connection;
 
-    public DBUser(DBConnection connection) {
+    public DBUserRepository(DBConnection connection) {
         this.connection = connection;
     }
 
     private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
-        return new User(resultSet.getString("user.name"));
+        return new User(resultSet.getString("users.name"));
     }
 
     private List<User> getListOfUsersFromResultSet(ResultSet resultSet) throws SQLException {
@@ -32,30 +34,36 @@ public class DBUser implements DBRepository<User> {
     @Override
     public User persist(User entity) throws SQLException {
         try (Connection conn = connection.getConnection()) {
-            var statement = conn.prepareStatement("INSERT INTO users (name) VALUE (?)");
+            var statement = conn.prepareStatement(
+                "INSERT INTO users (name) VALUE (?)", Statement.RETURN_GENERATED_KEYS
+            );
             statement.setString(1, entity.getName());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
                 return mapResultSetToUser(resultSet);
-            else
+            } else {
                 throw new SQLException("");
+            }
         } catch (SQLException throwables) {
-            throw new SQLException("Unable to create user with name: " + entity.getName());
+            throw new SQLException(throwables.getMessage());
+//            throw new SQLException("Unable to create user with name: " + entity.getName());
         }
     }
 
     @Override
-    public User getById(int id) throws SQLException {
+    public User getByPrimaryKey(Integer primaryKey) throws SQLException {
         try (Connection conn = connection.getConnection()) {
-            var statement = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
-            statement.setInt(1, id);
+            var statement = conn.prepareStatement("SELECT * FROM users WHERE id = ?;");
+            statement.setInt(1, 1);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
+            if (resultSet.next()) {
                 return mapResultSetToUser(resultSet);
-            else
+            } else {
                 throw new SQLException("Unable to find user");
+            }
         } catch (SQLException throwables) {
-            throw new SQLException("Could not find user with id: " + id);
+            throw new SQLException("Could not find user with id: " + primaryKey);
         }
     }
 
@@ -72,7 +80,8 @@ public class DBUser implements DBRepository<User> {
 
     @Override
     public List<User> createQuery(String query) throws SQLException {
-        try (Connection conn = connection.getConnection()) {
+        try {
+            Connection conn = connection.getConnection();
             var statement = conn.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             return getListOfUsersFromResultSet(resultSet);

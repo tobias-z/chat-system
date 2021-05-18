@@ -1,24 +1,24 @@
-package facades;
+package unit.facades;
 
-import domain.User;
+import domain.user.User;
 import infrastructure.DBConnection;
 import infrastructure.DBRepository;
-import infrastructure.database.DBUser;
+import infrastructure.database.DBUserRepository;
 import java.sql.SQLException;
 import java.util.List;
 
 public class UserFacade {
 
     private static UserFacade instance;
-    private final DBRepository<User> db;
+    private final DBRepository<User, Integer> db;
 
-    public UserFacade(DBRepository<User> db) {
+    public UserFacade(DBRepository<User, Integer> db) {
         this.db = db;
     }
 
     public static UserFacade getInstance() {
         if (instance == null) {
-            DBRepository<User> DBRepository = new DBUser(new DBConnection());
+            DBRepository<User, Integer> DBRepository = new DBUserRepository(new DBConnection());
             instance = new UserFacade(DBRepository);
         }
         return instance;
@@ -29,7 +29,7 @@ public class UserFacade {
     }
 
     public User getUserById(int userId) throws SQLException {
-        return db.getById(userId);
+        return db.getByPrimaryKey(userId);
     }
 
     public List<User> getAllUsers() throws SQLException {

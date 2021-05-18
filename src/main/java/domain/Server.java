@@ -1,6 +1,6 @@
 package domain;
 
-import java.io.BufferedReader;
+import domain.user.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
