@@ -12,7 +12,7 @@ class SetupIntegrationTests {
 
     static final String TEST_DB_URL = "jdbc:mysql://localhost:3306/startcode_test?serverTimezone=CET";
 
-    static void runTestDatabaseMigration() {
+    void runTestDatabaseMigration() {
         String USER = "dev";
         String PASS = "ax2";
 

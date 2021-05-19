@@ -1,9 +1,12 @@
 package facades;
 
+import domain.persistence.PersistMethod;
+import domain.persistence.PersistenceFactory;
 import domain.user.User;
 import infrastructure.DBConnection;
 import infrastructure.DBRepository;
 import infrastructure.database.DBUserRepository;
+import java.lang.reflect.Executable;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,7 +28,8 @@ public class UserFacade {
     }
 
     public User createUser(User user) throws SQLException {
-        return db.persist(user);
+        PersistenceFactory<User, Integer> factory = new PersistenceFactory<>(PersistMethod.USER, db);
+        return factory.validateAndCommit(user);
     }
 
     public User getUserById(int userId) throws SQLException {

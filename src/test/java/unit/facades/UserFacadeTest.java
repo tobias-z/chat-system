@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import unit.mocks.MockDBUserRepository;
 
 class UserFacadeTest {
@@ -25,6 +26,13 @@ class UserFacadeTest {
     @DisplayName("get by id should return a user")
     void getByIdShouldReturnAUser() throws SQLException {
         User user = FACADE.getUserById(1);
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //TODO (tz): implement this!
+                throw new UnsupportedOperationException("Not yet implemented!");
+            }
+        });
         assertNotNull(user);
     }
 
